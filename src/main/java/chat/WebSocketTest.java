@@ -1,9 +1,6 @@
 package chat;
 
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -31,8 +28,14 @@ public class WebSocketTest {
     @OnClose
     public void onClose(){
         webSet.remove(this);  //从set中删除
-        addOnlineNum();           //在线数减1
+        subOnlineNum();           //在线数减1
         System.out.println("有一连接关闭！当前在线人数为" + onlineNum);
+    }
+
+    @OnError
+    public void onError(Session session, Throwable error){
+        System.out.println("发生错误了。。。。。");
+        error.printStackTrace();
     }
 
     @OnMessage

@@ -17,8 +17,31 @@
     <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body>
+<body style="min-height: 1000px;">
 <h1>Hello World!</h1>
+
+
+<div class="modal-content" style="min-height: 200px;width: 75%;margin: 0 auto;">
+    <div style="height: 100px;width: 100%;background-color: #297ade;">
+
+    </div>
+    <div style="width: 70%;height: 400px;background-color: #4fe4a6;float: left;">
+
+    </div>
+    <div style="width: 30%;height: 400px;background-color: #c4e3f3;float: right;">
+        <div style="width: 100%;height: 70%;background-color: #c4e3f3"></div>
+        <div style="width: 100%;height: 30%;background-color: #66afe9">
+            <div style="width: 100%;height: 70%;background-color: aliceblue; margin: 0 auto;border-radius: 4px;">
+                <textarea style="resize:none;height: 100%;" class="form-control"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary btn-block">发送</button>
+        </div>
+
+    </div>
+    <div style="clear: both;"></div>
+
+</div>
+
 
 <div class="container-fluid">
     <div class="row">
