@@ -18,14 +18,16 @@
     <![endif]-->
 </head>
 <body>
-<h1>你好，世界！</h1>
+<h1>Hello World!</h1>
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-6 col-md-offset-3" style="background-color: #5bc0de">.col-md-6 .col-md-offset-3</div>
+        <div id="msg" class="col-md-6 col-md-offset-3" style="">
+
+        </div>
     </div>
 </div>
-<div id="msg"></div>
+<input type="text" id="sendMsg" width="25%">
 <button id="send" type="button" class="btn btn-primary btn-lg">发送</button>
 
 
@@ -77,7 +79,7 @@
 
         //将消息显示在网页上
         function setMessageInnerHTML(innerHTML) {
-            $('#msg').append('<li style="color: #d43f3a;font-size: 30px;">'+innerHTML+'</li>')
+            $('#msg').append('<div style="color: #d43f3a;font-size: 30px;">'+innerHTML+'</div>')
 //            document.getElementById('message').innerHTML += innerHTML + '<br/>';
         }
 
@@ -89,8 +91,14 @@
         //发送消息
         function send() {
 //            var message = document.getElementById('text').value;
+            var msg = $('#sendMsg').val();
             var message = '不要回复，不要回复........';
-            websocket.send(message);
+            if(msg != null){
+                websocket.send(msg);
+                $('#msg').append('<div style="color: #5e5e5e;font-size: 30px;">'+msg+'</div>')
+                $('#sendMsg').val("");
+            }
+
         }
 
     });

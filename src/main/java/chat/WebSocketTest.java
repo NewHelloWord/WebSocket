@@ -40,7 +40,9 @@ public class WebSocketTest {
         System.out.println("收到的客户端的消息："+message);
         for(WebSocketTest wt : webSet){
             try {
-                wt.sendMessage(message);
+                if(this.session!=wt.session){
+                    wt.sendMessage(message);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 continue;
