@@ -1,8 +1,14 @@
 package chat;
 
+import net.sf.json.JSONObject;
+
+import javax.json.JsonObject;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -11,9 +17,13 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint("/chat")
 public class WebSocketTest {
 
+    private String CREATE_USER_NICK = "/CREATE_USER_NICK/";
+
     private static int onlineNum = 0;  //当前在线数
 
     private static CopyOnWriteArraySet<WebSocketTest> webSet = new CopyOnWriteArraySet<WebSocketTest>();
+
+    private static ConcurrentHashMap<String, String> nickMap = new ConcurrentHashMap<String, String>();
 
     private Session session;
 
@@ -41,10 +51,29 @@ public class WebSocketTest {
     @OnMessage
     public void onMessage(String message,Session session){
         System.out.println("收到的客户端的消息："+message);
+        Map<String,String> map = new HashMap<String, String>();
+        if(nickMap.get(session.getId()) == null || nickMap.get(session.getId()).equals("无名")){
+            if(message.contains(CREATE_USER_NICK)){
+                nickMap.put(session.getId(),message.replace(CREATE_USER_NICK,""));
+                map.put("nick",message.replace(CREATE_USER_NICK,""));
+                map.put("message","大家好，我是"+message.replace(CREATE_USER_NICK,""));
+            }else {
+                nickMap.put(session.getId(),"无名");
+                map.put("nick","无名");
+                map.put("message",message);
+            }
+        }else {
+            map.put("nick",nickMap.get(session.getId()));
+            map.put("message",message);
+        }
+
+
+        JSONObject json = JSONObject.fromObject(map);
+        System.out.println(json.toString()+"-------------------");
         for(WebSocketTest wt : webSet){
             try {
                 if(this.session!=wt.session){
-                    wt.sendMessage(message);
+                    wt.sendMessage(json.toString());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
