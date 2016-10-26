@@ -36,7 +36,7 @@
             width: 70%;height: 400px;background-color: #4fe4a6;padding: 0 10px;overflow:auto;
         }
         .chatDiv  .chatBody{
-            width: 51%;min-height: 50px;font-size: 20px;line-height: 50px;
+            width: 90%;min-height: 50px;font-size: 20px;line-height: 50px;
         }
 
     </style>
@@ -120,7 +120,7 @@
         //连接成功建立的回调方法
         websocket.onopen = function () {
 //            setMessageInnerHTML("WebSocket连接成功");
-            setMessageInnerHTML("欢迎进入WebSocket聊天室。。。");
+            setMessageInnerHTML("欢迎");
         }
 
         //接收到消息的回调方法
