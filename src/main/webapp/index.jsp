@@ -8,7 +8,8 @@
     <title>WebSocket聊天室</title>
 
     <!-- Bootstrap -->
-    <link href="res/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="res/css/bootstrap.min.css">
+    <link rel="stylesheet" href="res/css/font-awesome.min.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -24,25 +25,124 @@
         .right{
             float: right;
         }
-        .clear:after{
-            content:".";
-            display:block;
-            height:0;
-            clear:both;
-            visibility:hidden;
-
+        .chat{
+            margin-top: 5px;
+            padding: 7px;
+            word-wrap: break-word;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color: #cfffcf;
+            float: left;
+        }
+        .myChat{
+            margin-top: 5px;
+            padding: 7px;
+            word-wrap: break-word;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color: #ffe6b8;
+            float: right;
+        }
+        .clear{
+            color: gray;
+            clear: both;
+            margin-left: 20px;
+            padding-top: 5px;
+        }
+        .leftChat{
+            width: 15%;
+            min-height: 200px;
+            background-color: #f7f2bc;
+            border-radius: 6px;
+            position: absolute;
+            left: 15%;
+        }
+        .title{
+            width: 100%;
+            height: 10%;
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            color: #019e66;
+        }
+        .m10{
+            margin-right: 10px;
         }
 
     </style>
 </head>
 <body style="min-height: 800px;font-family: 'Microsoft YaHei',Arial;">
 
-    <div style="width: 40%;height: 900px;margin: 20px auto;border: 1px solid #84a4ea;border-radius: 7px;">
+    <div class="leftChat">
+        <div class="title" style="margin-bottom: 20px;">
+            myChat
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">你的昵称</span>
+            <input id="inp_nickname" type="text" class="form-control" maxlength="10" value="谢春花">
+            <span id="btn_getnick" class="input-group-btn">
+                <button class="btn btn-default" type="button">
+                    <i style="color: orange;" class="icon-refresh"></i>
+                </button>
+            </span>
+        </div>
+
+        <div id="user_count" class="list-group-item list-group-item-success" style="cursor:pointer;">
+            <span id="nowusers_count" class="badge" style="background-color:green;">3</span>
+            <i class="icon-comment m10"></i>当前在线人数
+        </div>
+
+        <div id="user_list" class="list-group" style="overflow-y: auto; height: 316px;">
+            <a class="list-group-item" style="cursor: pointer;" >
+                <i class=" icon-github-alt m10"></i>
+                <span>街边的梧桐</span>
+            </a>
+
+
+            <a class="list-group-item" style="cursor: pointer;" >
+                <i class=" icon-github-alt m10"></i>
+                <span>冬天的风</span>
+            </a>
+
+        </div>
+
+    </div>
+
+    <div style="width: 40%;height: 900px;margin: 20px auto;border: 1px solid #84a4ea;border-radius: 7px;position: relative">
         <div style="width: 100%;height: 8%;background-color: #95afea;border-bottom: 1px solid #84a4ea;border-radius: 5px 5px 0 0;">
             <span style="height: 100%;line-height: 70px;font-size: 21px;padding-left: 20px;">正在制作漂亮的界面。。。</span>
         </div>
 
         <div style="overflow-y: auto;height: 75%;width: 100%;padding: 15px;border: 1px solid #eeeeee">
+
+            <!---------------- 聊天框别人的消息模板 start --------------------->
+            <div style="float: left">
+                <div style="text-align: left">
+                   <span style="font-weight: 900;color: #6d6d6d;">谢春花</span>
+                    <span style="color: #d2d2d2;">21:37:20</span>
+                </div>
+                <div class="chat">
+                    荏苒冬春去
+                </div>
+            </div>
+            <div class="clear"></div>
+            <!---------------- 聊天框别人的消息模板 end --------------------->
+
+            <!---------------- 聊天框my的消息模板 start --------------------->
+            <div style="float: right">
+                <div style="text-align: right">
+                    <span style="font-weight: 900;color: #6d6d6d;">谢春花</span>
+                    <span style="color: #d2d2d2;">21:37:20</span>
+                </div>
+                <div class="myChat">
+                    借我
+                </div>
+            </div>
+            <div class="clear"></div>
+            <!---------------- 聊天框my的消息模板 end --------------------->
+
 
         </div>
 

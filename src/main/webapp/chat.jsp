@@ -8,7 +8,8 @@
     <title>WebSocket聊天室</title>
 
     <!-- Bootstrap -->
-    <link href="res/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="res/css/bootstrap.min.css">
+    <link rel="stylesheet" href="res/css/font-awesome.min.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
