@@ -110,7 +110,7 @@
 
     </div>
 
-    <div style="width: 40%;height: 900px;margin: 20px auto;border: 1px solid #84a4ea;border-radius: 7px;position: relative">
+    <div style="width: 40%;height: 700px;margin: 20px auto;border: 1px solid #84a4ea;border-radius: 7px;position: relative">
         <div style="width: 100%;height: 8%;background-color: #95afea;border-bottom: 1px solid #84a4ea;border-radius: 5px 5px 0 0;">
             <span style="height: 100%;line-height: 70px;font-size: 21px;padding-left: 20px;">正在制作漂亮的界面。。。</span>
         </div>
@@ -154,9 +154,16 @@
 
 
 
-<script src="res/js/jquery.min.js"></script>
-<script src="res/js/bootstrap.min.js"></script>
-<%--<script>
+    <script src="res/js/jquery.min.js"></script>
+    <script src="res/js/bootstrap.min.js"></script>
+    <script src="res/layer/layer.js"></script>
+
+    <script type="text/javascript" src="http://pv.sohu.com/cityjson?ie=utf-8" charset="utf-8"></script>
+    <script type="text/javascript">
+        //var ip = returnCitySN['cip'];
+        //var cityName = returnCitySN['cname'];
+    </script>
+    <script>
     $(function(){
 
         var websocket = null;
@@ -172,11 +179,11 @@
     function initWebSocket() {
         //判断当前浏览器是否支持WebSocket
         if ('WebSocket' in window) {
-//          websocket = new WebSocket("ws://yl12345.vicp.net:15699/chat");
-            websocket = new WebSocket("ws://localhost:8080/chat");
+          websocket = new WebSocket("ws://yl12345.vicp.net:15699/chat");
+//            websocket = new WebSocket("ws://localhost:8080/chat");
         }
         else {
-            alert('当前浏览器 Not support websocket')
+            alert('当前浏览器 Not support webocket')
         }
 
         //连接发生错误的回调方法
@@ -186,14 +193,30 @@
 
         //连接成功建立的回调方法
         websocket.onopen = function () {
-//            setMessageInnerHTML("WebSocket连接成功");
-            setMessageInnerHTML("欢迎");
+            var data = {
+                'ip': returnCitySN['cip'],
+                'city':returnCitySN['cname']
+            };
+            sendJson('join',data);
+            layer.msg('在火炉旁，找个位子随便坐');
         }
 
         //接收到消息的回调方法
         websocket.onmessage = function (event) {
             var data = JSON.parse(event.data);
-            setMessageInnerHTML(data.nick+': '+data.message);
+            var act = data.act;
+
+            if(act == "join"){
+                //alert(data.nick);
+                //alert(data.nickMap.length);
+                for(var key in data.nickMap){
+                    //alert(o);
+                    //alert(data.nickMap[o]);
+                   alert(key+':'+ data.nickMap[key]);
+                }
+            }
+
+            //setMessageInnerHTML(data.nick+': '+data.message);
         }
 
         //连接关闭的回调方法
@@ -219,6 +242,13 @@
         }
     }
 
+
+    function sendJson(act,data){
+        websocket.send(JSON.stringify({
+            'act':act,
+            'data':data
+        }));
+    }
 
     //发送消息
     function send() {
@@ -265,6 +295,6 @@
 
 
 
-</script>--%>
+</script>
 </body>
 </html>
