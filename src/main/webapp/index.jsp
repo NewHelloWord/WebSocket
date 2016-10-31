@@ -115,12 +115,12 @@
             <span style="height: 100%;line-height: 70px;font-size: 21px;padding-left: 20px;">正在制作漂亮的界面。。。</span>
         </div>
 
-        <div style="overflow-y: auto;height: 75%;width: 100%;padding: 15px;border: 1px solid #eeeeee">
+        <div id="content" style="overflow-y: auto;height: 75%;width: 100%;padding: 15px;border: 1px solid #eeeeee">
 
             <!---------------- 聊天框别人的消息模板 start --------------------->
             <div style="float: left">
                 <div style="text-align: left">
-                   <span style="font-weight: 900;color: #6d6d6d;">谢春花</span>
+                   <span style="font-weight: 900;color: #6d6d6d;">谢春花</span> &nbsp;
                     <span style="color: #d2d2d2;">21:37:20</span>
                 </div>
                 <div class="chat">
@@ -137,7 +137,7 @@
                     <span style="color: #d2d2d2;">21:37:20</span>
                 </div>
                 <div class="myChat">
-                    借我
+                    <span>借我</span>
                 </div>
             </div>
             <div class="clear"></div>
@@ -147,8 +147,8 @@
         </div>
 
         <div style="width: 100%;height: 17%">
-            <textarea maxlength="500" placeholder="请在此输入聊天信息" style="resize: none; width: 100%; height: 65%;padding: 6px 12px;font-size: 16px;border-radius: 4px;"></textarea>
-            <button type="button" class="btn btn-primary right" style="width: 200px;height: 30%;">发送</button>
+            <textarea id="sendMsg" maxlength="500" placeholder="请在此输入聊天信息" style="resize: none; width: 100%; height: 65%;padding: 6px 12px;font-size: 16px;border-radius: 4px;"></textarea>
+            <button id="send" type="button" class="btn btn-primary right" style="width: 200px;height: 30%;">发送</button>
         </div>
     </div>
 
@@ -179,8 +179,8 @@
     function initWebSocket() {
         //判断当前浏览器是否支持WebSocket
         if ('WebSocket' in window) {
-          websocket = new WebSocket("ws://yl12345.vicp.net:15699/chat");
-//            websocket = new WebSocket("ws://localhost:8080/chat");
+//          websocket = new WebSocket("ws://yl12345.vicp.net:15699/chat");
+            websocket = new WebSocket("ws://localhost:8080/chat");
         }
         else {
             alert('当前浏览器 Not support webocket')
@@ -214,6 +214,8 @@
                     //alert(data.nickMap[o]);
                    alert(key+':'+ data.nickMap[key]);
                 }
+            }else if(act == "join"){
+
             }
 
             //setMessageInnerHTML(data.nick+': '+data.message);
@@ -252,13 +254,14 @@
 
     //发送消息
     function send() {
-        var msg = $('#sendMsg').val();
-        var message = '不要回复，不要回复........';
+        var msg = $.trim($('#sendMsg').val());
         if(msg != null){
-            websocket.send(msg);
-            $('.chatDiv').append('<div class="chatBody right"><span class="right">'+msg+'</span></span></div>');
-            $('#sendMsg').val("");
-            keepBottom();
+            var data = {
+                'msg':msg,
+            };
+            sendJson('sendMsg',data);
+            $('#sendMsg').val('');
+            appendMy('谢春花','20:20:20',msg);
         }
     }
 
@@ -269,6 +272,23 @@
         });
         $(".chatDiv").scrollTop(height);
     }
+
+    function appendMy(name,time,msg){
+        var html = "<div style=\"float: right\">"
+                        +"<div style=\"text-align: right\">"
+                            +"<span style=\"font-weight: 900;color: #6d6d6d;\">"+name+"</span> &nbsp;"
+                            +"<span style=\"color: #d2d2d2;\">"+time+"</span>"
+                        +"</div>"
+                        +"<div class=\"myChat\">"
+                            +"<span>"+msg+"</span>"
+                        +"</div>"
+                    +"</div>"
+                    +"<div class=\"clear\"></div>";
+        $('#content').append(html);
+    }
+
+
+
 
     //当前日期加时间(如:2009-06-12 12:00)
     function CurentTime(){
