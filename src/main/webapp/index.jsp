@@ -165,6 +165,24 @@
     </script>
     <script>
     $(function(){
+        
+        $.ajax({
+            url : "getNick.htm",
+            dataType : "JSON",
+            type : "post",
+            data : {"word":"你好"},
+            async:false,
+            success : function(data){
+                alert(data.nick);
+                alert(data.age);
+            },
+            error : function(XMLHttpRequest, textStatus, errorThrown){
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+
+        });
 
         var websocket = null;
 
@@ -212,7 +230,7 @@
                 for(var key in data.nickMap){
                     //alert(o);
                     //alert(data.nickMap[o]);
-                   alert(key+':'+ data.nickMap[key]);
+                   //alert(key+':'+ data.nickMap[key]);
                 }
             }else if(act == "join"){
 
