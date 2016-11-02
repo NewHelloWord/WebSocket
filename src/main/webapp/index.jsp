@@ -158,11 +158,11 @@
     <script src="res/js/bootstrap.min.js"></script>
     <script src="res/layer/layer.js"></script>
 
-    <script type="text/javascript" src="http://pv.sohu.com/cityjson?ie=utf-8" charset="utf-8"></script>
-    <script type="text/javascript">
-        //var ip = returnCitySN['cip'];
-        //var cityName = returnCitySN['cname'];
-    </script>
+    <%--<script type="text/javascript" src="http://pv.sohu.com/cityjson?ie=utf-8" charset="utf-8"></script>--%>
+    <%--<script type="text/javascript">--%>
+        <%--//var ip = returnCitySN['cip'];--%>
+        <%--//var cityName = returnCitySN['cname'];--%>
+    <%--</script>--%>
     <script>
     $(function(){
         
@@ -171,10 +171,10 @@
             dataType : "JSON",
             type : "post",
             data : {"word":"你好"},
-            async:false,
+            async:true,
             success : function(data){
-                alert(data.nick);
-                alert(data.age);
+//                alert(data.nick);
+                $('#inp_nickname').val(data.nick);
             },
             error : function(XMLHttpRequest, textStatus, errorThrown){
                 alert(XMLHttpRequest.status);
@@ -212,8 +212,8 @@
         //连接成功建立的回调方法
         websocket.onopen = function () {
             var data = {
-                'ip': returnCitySN['cip'],
-                'city':returnCitySN['cname']
+                'nick': $('#inp_nickname').val()
+//                'city':returnCitySN['cname']
             };
             sendJson('join',data);
             layer.msg('在火炉旁，找个位子随便坐');

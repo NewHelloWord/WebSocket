@@ -29,7 +29,7 @@ public class CoreServer {
 
         //初次加入 data: ip city
         if(act.equals("join")){
-            nickMap.put(session.getId(),"来自"+data.getString("city")+"的网友（"+data.getString("ip")+")");
+            nickMap.put(session.getId(),data.getString("nick"));
             map.put("act","join");
             map.put("nick",nickMap.get(session.getId()));
             map.put("pNum",onlineNum);    //当前在线人数

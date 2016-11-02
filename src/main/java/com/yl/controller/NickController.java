@@ -4,6 +4,7 @@ import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import utils.ChineseName;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,9 +18,9 @@ public class NickController {
     @ResponseBody
     public String getNick(HttpServletRequest request){
         System.out.println("========"+request.getParameter("word"));
+        String name = ChineseName.createName();
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("nick","JackAndRose");
-        jsonObject.put("age","黄花大闺女");
+        jsonObject.put("nick",name);
         return  jsonObject.toString();
     }
 
