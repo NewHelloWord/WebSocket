@@ -156,6 +156,7 @@
 
     <script src="res/js/jquery.min.js"></script>
     <script src="res/js/bootstrap.min.js"></script>
+    <script src="res/js/jquery.cookie.js"></script>
     <script src="res/layer/layer.js"></script>
 
     <%--<script type="text/javascript" src="http://pv.sohu.com/cityjson?ie=utf-8" charset="utf-8"></script>--%>
@@ -165,6 +166,9 @@
     <%--</script>--%>
     <script>
     $(function(){
+
+        $.cookie('say','11');
+        //alert($.cookie('say'));
         
         $.ajax({
             url : "getNick.htm",
