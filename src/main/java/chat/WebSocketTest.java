@@ -56,7 +56,22 @@ public class WebSocketTest {
 
     @OnMessage
     public void onMessage(String message,Session session){
+
         System.out.println("收到的客户端的消息："+message);
+
+        Map<String,Object> map = CoreServer.dealMessage(session,message);
+        JSONObject json = JSONObject.fromObject(map);
+        System.out.println("onMessage========"+json);
+        for(WebSocketTest wt : OpenServer.getWebSet()){
+            try {
+                if(!wt.session.equals(this.session)){
+                    wt.sendMessage(json.toString());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
 //        JSONObject json = JSONObject.fromObject(message);
 //        System.out.println(json.getString("act"));
 //        System.out.println(json.getJSONObject("data").getString("ip"));
@@ -94,16 +109,6 @@ public class WebSocketTest {
 //        }
 
 
-        Map<String,Object> map = CoreServer.dealMessage(session,message);
-        JSONObject json = JSONObject.fromObject(map);
-        System.out.println("JSON========"+json);
-        for(WebSocketTest wt : OpenServer.getWebSet()){
-            try {
-                wt.sendMessage(json.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
 
     }
 

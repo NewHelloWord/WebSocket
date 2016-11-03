@@ -27,13 +27,13 @@ public class CoreServer {
         JSONObject data = json.getJSONObject("data");
         String act = json.getString("act");
 
-        //初次加入 data: ip city
+        //初次加入 data: nick
         if(act.equals("join")){
             nickMap.put(session.getId(),data.getString("nick"));
             map.put("act","join");
             map.put("nick",nickMap.get(session.getId()));
             map.put("pNum",onlineNum);    //当前在线人数
-            map.put("nickMap",nickMap);
+//            map.put("nickMap",nickMap);   //人数列表
         }
 
         return map;
@@ -42,6 +42,7 @@ public class CoreServer {
     public static int getOnlineNum(){
         return onlineNum;
     }
+
 
     public static synchronized int addOnlineNum() {
         return ++onlineNum;
@@ -53,6 +54,10 @@ public class CoreServer {
 
     public static ConcurrentHashMap<String, String> getNickMap() {
         return nickMap;
+    }
+
+    public static JSONObject getJsonNickMap(){
+        return JSONObject.fromObject(nickMap);
     }
 
 }

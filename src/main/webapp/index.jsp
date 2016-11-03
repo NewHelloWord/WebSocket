@@ -95,16 +95,16 @@
         </div>
 
         <div id="user_list" class="list-group" style="overflow-y: auto; height: 316px;">
-            <a class="list-group-item" style="cursor: pointer;" >
-                <i class=" icon-github-alt m10"></i>
-                <span>街边的梧桐</span>
-            </a>
+            <%--<a class="list-group-item" style="cursor: pointer;" >--%>
+                <%--<i class=" icon-github-alt m10"></i>--%>
+                <%--<span>街边的梧桐</span>--%>
+            <%--</a>--%>
 
 
-            <a class="list-group-item" style="cursor: pointer;" >
-                <i class=" icon-github-alt m10"></i>
-                <span>冬天的风</span>
-            </a>
+            <%--<a class="list-group-item" style="cursor: pointer;" >--%>
+                <%--<i class=" icon-github-alt m10"></i>--%>
+                <%--<span>冬天的风</span>--%>
+            <%--</a>--%>
 
         </div>
 
@@ -151,7 +151,7 @@
             <button id="send" type="button" class="btn btn-primary right" style="width: 200px;height: 30%;">发送</button>
         </div>
     </div>
-
+    <input id="uid" type="hidden">
 
 
     <script src="res/js/jquery.min.js"></script>
@@ -167,18 +167,26 @@
     <script>
     $(function(){
 
-        $.cookie('say','11');
-        //alert($.cookie('say'));
-        
+        //获取昵称和唯一标识
         $.ajax({
             url : "getNick.htm",
             dataType : "JSON",
             type : "post",
             data : {"word":"你好"},
-            async:true,
+            async:false,
             success : function(data){
 //                alert(data.nick);
+//                alert(data.uid);
+                $.cookie('uid',data.uid);
                 $('#inp_nickname').val(data.nick);
+                $('#uid').val(data.uid);
+                alert(getJsonLength(data.nickMap));
+                $('#nowusers_count').text(getJsonLength(data.nickMap)+1);
+                for(var key in data.nickMap){
+                   //alert(key+':'+ data.nickMap[key]);
+                    addPeople(data.nickMap[key]);
+                }
+                console.log(data.nickMap);
             },
             error : function(XMLHttpRequest, textStatus, errorThrown){
                 alert(XMLHttpRequest.status);
@@ -229,14 +237,10 @@
             var act = data.act;
 
             if(act == "join"){
-                //alert(data.nick);
-                //alert(data.nickMap.length);
-                for(var key in data.nickMap){
-                    //alert(o);
-                    //alert(data.nickMap[o]);
-                   //alert(key+':'+ data.nickMap[key]);
-                }
-            }else if(act == "join"){
+                addPeople(data.nick);
+                $('#nowusers_count').text(data.pNum);
+
+            }else if(act == ""){
 
             }
 
@@ -285,6 +289,24 @@
             $('#sendMsg').val('');
             appendMy('谢春花','20:20:20',msg);
         }
+    }
+
+    //添加在线人数
+    function addPeople(nick){
+        var html = "<a class=\"list-group-item\" style=\"cursor: pointer;\" >";
+            html += "<i class=\" icon-github-alt m10\"></i>";
+            html += "<span>"+nick+"</span>";
+            html += "</a>";
+        $('#user_list').append(html);
+    }
+
+    //求JSON Object的长度
+    function getJsonLength(jsonData){
+        var jsonLength = 0;
+        for(var item in jsonData){
+            jsonLength++;
+        }
+        return jsonLength;
     }
 
     function keepBottom() {
