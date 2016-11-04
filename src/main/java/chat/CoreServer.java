@@ -38,6 +38,8 @@ public class CoreServer {
             map.put("act","msg");
             map.put("msg",data.getString("msg"));
             map.put("nick",nickMap.get(session.getId()));
+        }else if(act.equals("back")){
+
         }
 
         return map;

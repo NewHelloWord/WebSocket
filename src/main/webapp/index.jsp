@@ -152,7 +152,6 @@
         </div>
     </div>
     <input id="uid" type="hidden">
-    <input id="sid" type="hidden">
 
 
     <script src="res/js/jquery.min.js"></script>
@@ -251,6 +250,7 @@
                 'nick': $('#inp_nickname').val()
 //                'city':returnCitySN['cname']
             };
+            sendJson("back",data);
             layer.msg("WebSocket连接关闭");
         }
 
