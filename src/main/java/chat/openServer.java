@@ -3,7 +3,7 @@ package chat;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
- * Created by JerryMouse on 2016/11/1.
+ * Created by JerryMouse on 2016/11/5.
  */
 public class OpenServer {
 
@@ -12,5 +12,6 @@ public class OpenServer {
     public static CopyOnWriteArraySet<WebSocketTest> getWebSet() {
         return webSet;
     }
+
 
 }

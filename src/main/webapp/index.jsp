@@ -240,6 +240,7 @@
                 keepBottom();
             }else if(act == "back"){
                 $('#sid_'+data.sid+'').remove();
+                $('#nowusers_count').text(data.pNum);
             }
         }
 
