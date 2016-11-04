@@ -38,7 +38,7 @@ public class WebSocketTest {
     }
 
     @OnClose
-    public void onClose(){
+    public void onClose(Session session){
         OpenServer.getWebSet().remove(this);
         int num = CoreServer.subOnlineNum();
         OpenServer.getWebSet().remove(this);
@@ -46,6 +46,22 @@ public class WebSocketTest {
         //webSet.remove(this);  //从set中删除
         //subOnlineNum();           //在线数减1
         System.out.println("有一连接关闭！当前在线人数为" + num);
+
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put("act","back");
+        map.put("sid",session.getId());
+        map.put("pNum",CoreServer.getOnlineNum());
+        JSONObject json = JSONObject.fromObject(map);
+        send(json);
+//        for(WebSocketTest wt : OpenServer.getWebSet()){
+//            try {
+//                if(!wt.session.equals(this.session)){
+//                    wt.sendMessage(json.toString());
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     @OnError
@@ -62,15 +78,16 @@ public class WebSocketTest {
         Map<String,Object> map = CoreServer.dealMessage(session,message);
         JSONObject json = JSONObject.fromObject(map);
         System.out.println("onMessage========"+json);
-        for(WebSocketTest wt : OpenServer.getWebSet()){
-            try {
-                if(!wt.session.equals(this.session)){
-                    wt.sendMessage(json.toString());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        send(json);
+//        for(WebSocketTest wt : OpenServer.getWebSet()){
+//            try {
+//                if(!wt.session.equals(this.session)){
+//                    wt.sendMessage(json.toString());
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
 //        JSONObject json = JSONObject.fromObject(message);
 //        System.out.println(json.getString("act"));
@@ -117,6 +134,17 @@ public class WebSocketTest {
         this.session.getBasicRemote().sendText(message);
     }
 
+    public void send(JSONObject json){
+        for(WebSocketTest wt : OpenServer.getWebSet()){
+            try {
+                if(!wt.session.equals(this.session)){
+                    wt.sendMessage(json.toString());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 //    public static synchronized int addOnlineNum() {
 //        return ++onlineNum;

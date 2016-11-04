@@ -181,7 +181,7 @@
                 $('#nowusers_count').text(getJsonLength(data.nickMap)+1);
                 for(var key in data.nickMap){
                    //alert(key+':'+ data.nickMap[key]);
-                    addPeople(data.nickMap[key]);
+                    addPeople(key,data.nickMap[key]);
                 }
                 console.log(data.nickMap);
             },
@@ -222,7 +222,6 @@
         websocket.onopen = function () {
             var data = {
                 'nick': $('#inp_nickname').val()
-//                'city':returnCitySN['cname']
             };
             sendJson('join',data);
             layer.msg('在火炉旁，找个位子随便坐');
@@ -234,21 +233,20 @@
             var act = data.act;
 
             if(act == "join"){
-                addPeople(data.nick);
+                addPeople(data.sid,data.nick);
                 $('#nowusers_count').text(data.pNum);
-
             }else if(act == "msg"){
                 appendOther(data.nick,CurentTime(),data.msg);
+                keepBottom();
+            }else if(act == "back"){
+                $('#sid_'+data.sid+'').remove();
             }
-
-            //setMessageInnerHTML(data.nick+': '+data.message);
         }
 
         //连接关闭的回调方法
         websocket.onclose = function () {
             var data = {
                 'nick': $('#inp_nickname').val()
-//                'city':returnCitySN['cname']
             };
             sendJson("back",data);
             layer.msg("WebSocket连接关闭");
@@ -259,12 +257,6 @@
             closeWebSocket();
         }
 
-        //将消息显示在网页上
-        function setMessageInnerHTML(innerHTML) {
-            $('.chatDiv').append('<div class="chatBody left"><span class="left">'+innerHTML+'</span></div>');
-            keepBottom();
-//            document.getElementById('message').innerHTML += innerHTML + '<br/>';
-        }
 
         //关闭WebSocket连接
         function closeWebSocket() {
@@ -292,12 +284,13 @@
             //TODO
 //            appendMy('谢春花','20:20:20',msg);
             appendMy($('#inp_nickname').val(),CurentTime(),msg);
+            keepBottom();
         }
     }
 
     //添加在线人数
-    function addPeople(nick){
-        var html = "<a class=\"list-group-item\" style=\"cursor: pointer;\" >";
+    function addPeople(sid,nick){
+        var html = "<a id=\"sid_"+sid+"\" class=\"list-group-item\" style=\"cursor: pointer;\" >";
             html += "<i class=\" icon-github-alt m10\"></i>";
             html += "<span>"+nick+"</span>";
             html += "</a>";
@@ -306,7 +299,7 @@
 
     //添加自己的消息
     function appendMy(name,time,msg){
-        var html = "<div style=\"float: right\">"
+        var html = "<div class='chatBody' style=\"float: right\">"
                         +"<div style=\"text-align: right\">"
                             +"<span style=\"font-weight: 900;color: #6d6d6d;\">"+name+"</span> &nbsp;"
                             +"<span style=\"color: #d2d2d2;\">"+time+"</span>"
@@ -321,7 +314,7 @@
 
     function appendOther(name,time,msg){
 
-        var html = "<div style=\"float: left\">";
+        var html = "<div class='chatBody' style=\"float: left\">";
             html += "<div style=\"text-align: left\">";
             html += "<span style=\"font-weight: 900;color: #6d6d6d;\">"+name+"</span> &nbsp;";
             html += "<span style=\"color: #d2d2d2;\">"+time+"</span>";
@@ -347,9 +340,9 @@
     function keepBottom() {
         var height = 0;
         $('.chatBody').each(function(){
-            height += $(this).height();
+            height += ($(this).height()+5);
         });
-        $(".chatDiv").scrollTop(height);
+        $("#content").scrollTop(height);
     }
 
 

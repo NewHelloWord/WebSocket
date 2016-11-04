@@ -32,6 +32,7 @@ public class CoreServer {
             nickMap.put(session.getId(),data.getString("nick"));
             map.put("act","join");
             map.put("nick",nickMap.get(session.getId()));
+            map.put("sid",session.getId());
             map.put("pNum",onlineNum);    //当前在线人数
 //            map.put("nickMap",nickMap);   //人数列表
         }else if(act.equals("msg")){
@@ -39,7 +40,9 @@ public class CoreServer {
             map.put("msg",data.getString("msg"));
             map.put("nick",nickMap.get(session.getId()));
         }else if(act.equals("back")){
-
+            map.put("act","back");
+            map.put("sid",session.getId());
+            map.put("pNum",onlineNum);
         }
 
         return map;
