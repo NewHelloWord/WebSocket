@@ -152,6 +152,7 @@
         </div>
     </div>
     <input id="uid" type="hidden">
+    <input id="sid" type="hidden">
 
 
     <script src="res/js/jquery.min.js"></script>
@@ -175,12 +176,9 @@
             data : {"word":"你好"},
             async:false,
             success : function(data){
-//                alert(data.nick);
-//                alert(data.uid);
                 $.cookie('uid',data.uid);
                 $('#inp_nickname').val(data.nick);
                 $('#uid').val(data.uid);
-                alert(getJsonLength(data.nickMap));
                 $('#nowusers_count').text(getJsonLength(data.nickMap)+1);
                 for(var key in data.nickMap){
                    //alert(key+':'+ data.nickMap[key]);
@@ -213,12 +211,12 @@
             websocket = new WebSocket("ws://localhost:8080/chat");
         }
         else {
-            alert('当前浏览器 Not support webocket')
+            layer.msg('当前浏览器 Not support webocket');
         }
 
         //连接发生错误的回调方法
         websocket.onerror = function () {
-            setMessageInnerHTML("WebSocket连接发生错误");
+            layer.msg("WebSocket连接发生错误");
         };
 
         //连接成功建立的回调方法
@@ -240,8 +238,8 @@
                 addPeople(data.nick);
                 $('#nowusers_count').text(data.pNum);
 
-            }else if(act == ""){
-
+            }else if(act == "msg"){
+                appendOther(data.nick,CurentTime(),data.msg);
             }
 
             //setMessageInnerHTML(data.nick+': '+data.message);
@@ -249,7 +247,11 @@
 
         //连接关闭的回调方法
         websocket.onclose = function () {
-            setMessageInnerHTML("WebSocket连接关闭");
+            var data = {
+                'nick': $('#inp_nickname').val()
+//                'city':returnCitySN['cname']
+            };
+            layer.msg("WebSocket连接关闭");
         }
 
         //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
@@ -285,9 +287,11 @@
             var data = {
                 'msg':msg,
             };
-            sendJson('sendMsg',data);
+            sendJson('msg',data);
             $('#sendMsg').val('');
-            appendMy('谢春花','20:20:20',msg);
+            //TODO
+//            appendMy('谢春花','20:20:20',msg);
+            appendMy($('#inp_nickname').val(),CurentTime(),msg);
         }
     }
 
@@ -298,6 +302,37 @@
             html += "<span>"+nick+"</span>";
             html += "</a>";
         $('#user_list').append(html);
+    }
+
+    //添加自己的消息
+    function appendMy(name,time,msg){
+        var html = "<div style=\"float: right\">"
+                        +"<div style=\"text-align: right\">"
+                            +"<span style=\"font-weight: 900;color: #6d6d6d;\">"+name+"</span> &nbsp;"
+                            +"<span style=\"color: #d2d2d2;\">"+time+"</span>"
+                        +"</div>"
+                        +"<div class=\"myChat\">"
+                            +"<span>"+msg+"</span>"
+                        +"</div>"
+                    +"</div>"
+                    +"<div class=\"clear\"></div>";
+        $('#content').append(html);
+    }
+
+    function appendOther(name,time,msg){
+
+        var html = "<div style=\"float: left\">";
+            html += "<div style=\"text-align: left\">";
+            html += "<span style=\"font-weight: 900;color: #6d6d6d;\">"+name+"</span> &nbsp;";
+            html += "<span style=\"color: #d2d2d2;\">"+time+"</span>";
+            html += "</div>";
+            html += "<div class=\"chat\">";
+            html += "<span>"+msg+"</span>";
+            html += "</div>";
+            html += "</div>";
+            html += "<div class=\"clear\"></div>";
+        $('#content').append(html);
+
     }
 
     //求JSON Object的长度
@@ -317,20 +352,6 @@
         $(".chatDiv").scrollTop(height);
     }
 
-    function appendMy(name,time,msg){
-        var html = "<div style=\"float: right\">"
-                        +"<div style=\"text-align: right\">"
-                            +"<span style=\"font-weight: 900;color: #6d6d6d;\">"+name+"</span> &nbsp;"
-                            +"<span style=\"color: #d2d2d2;\">"+time+"</span>"
-                        +"</div>"
-                        +"<div class=\"myChat\">"
-                            +"<span>"+msg+"</span>"
-                        +"</div>"
-                    +"</div>"
-                    +"<div class=\"clear\"></div>";
-        $('#content').append(html);
-    }
-
 
 
 
@@ -342,18 +363,22 @@
         var day = now.getDate();            //日
         var hh = now.getHours();            //时
         var mm = now.getMinutes();          //分
-        var clock = year + "-";
-        if(month < 10)
-            clock += "0";
-        clock += month + "-";
-        if(day < 10)
-            clock += "0";
-        clock += day + " ";
+        var ss = now.getSeconds();        //秒
+//        var clock = year + "-";
+//        if(month < 10)
+//            clock += "0";
+//        clock += month + "-";
+//        if(day < 10)
+//            clock += "0";
+//        clock += day + " ";
+        var clock = "";
         if(hh < 10)
             clock += "0";
         clock += hh + ":";
         if (mm < 10) clock += '0';
-        clock += mm;
+        clock += mm + ":";
+        if (ss < 10) clock += '0';
+        clock += ss;
         return(clock);
     }
 

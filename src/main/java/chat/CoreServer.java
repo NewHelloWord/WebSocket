@@ -34,6 +34,10 @@ public class CoreServer {
             map.put("nick",nickMap.get(session.getId()));
             map.put("pNum",onlineNum);    //当前在线人数
 //            map.put("nickMap",nickMap);   //人数列表
+        }else if(act.equals("msg")){
+            map.put("act","msg");
+            map.put("msg",data.getString("msg"));
+            map.put("nick",nickMap.get(session.getId()));
         }
 
         return map;
