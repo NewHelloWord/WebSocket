@@ -57,7 +57,7 @@
             background-color: #f7f2bc;
             border-radius: 6px;
             position: absolute;
-            left: 15%;
+            left: 20%;
         }
         .title{
             width: 100%;
@@ -81,7 +81,7 @@
         </div>
         <div class="input-group">
             <span class="input-group-addon">你的昵称</span>
-            <input id="inp_nickname" type="text" class="form-control" maxlength="10" value="谢春花">
+            <input id="inp_nickname" type="text" class="form-control" maxlength="10" value="谢春花" readonly>
             <span id="btn_getnick" class="input-group-btn">
                 <button class="btn btn-default" type="button">
                     <i style="color: orange;" class="icon-refresh"></i>
@@ -110,7 +110,7 @@
 
     </div>
 
-    <div style="width: 40%;height: 700px;margin: 20px auto;border: 1px solid #84a4ea;border-radius: 7px;position: relative">
+    <div style="width: 30%;height: 700px;margin: 20px auto;border: 1px solid #84a4ea;border-radius: 7px;position: relative">
         <div style="width: 100%;height: 8%;background-color: #95afea;border-bottom: 1px solid #84a4ea;border-radius: 5px 5px 0 0;">
             <span style="height: 100%;line-height: 70px;font-size: 21px;padding-left: 20px;">正在制作漂亮的界面。。。</span>
         </div>
@@ -167,6 +167,8 @@
     <script>
     $(function(){
 
+        init_control();
+
         //获取昵称和唯一标识
         $.ajax({
             url : "getNick.htm",
@@ -202,6 +204,26 @@
         });
 
     });
+
+    //================================================================================
+    function init_control() {
+//        $(".leftChat").height(window.innerHeight);
+//        $("#zone_left .list-group").height(window.innerHeight - 225),
+//        $("#div_msgpanel").width(.45 * (window.innerWidth - 100)),
+//        $("#div_msgpanel").height(window.innerHeight - 200),
+//        $("#div_msgbox").height(window.innerHeight - 274),
+//        $("#div_privmsg").height(window.innerHeight - 274),
+//        $("#nav_action").width(window.innerWidth - $("#div_msgpanel").width() - $("#zone_left").width() - 40),
+//        $("#zone_left").show(),
+//        $("#zone_center").show(),
+//        1 != $.cookie("isSound") && $.cookie("isSound") ? $("#msg_tips").attr("src", "IMG/sound_off.png") : $("#msg_tips").attr("src", "IMG/sound_on.png")
+    }
+
+
+    //================================================================================
+
+
+
 
     function initWebSocket() {
         //判断当前浏览器是否支持WebSocket
