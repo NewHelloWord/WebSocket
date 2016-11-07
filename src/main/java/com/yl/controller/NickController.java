@@ -21,7 +21,6 @@ public class NickController {
     @RequestMapping(value = "/getNick.htm")
     @ResponseBody
     public String getNick(HttpServletRequest request){
-        System.out.println("========"+request.getParameter("word"));
         String name = ChineseName.createName();
         String uid = UuidUtils.getUuid();
         ConcurrentHashMap nickMap = CoreServer.getNickMap();

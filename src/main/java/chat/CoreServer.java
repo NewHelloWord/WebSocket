@@ -1,6 +1,7 @@
 package chat;
 
 import net.sf.json.JSONObject;
+import utils.ChineseName;
 
 import javax.websocket.Session;
 import java.util.HashMap;
@@ -43,6 +44,11 @@ public class CoreServer {
             map.put("act","back");
             map.put("sid",session.getId());
             map.put("pNum",onlineNum);
+        }else if(act.equals("changeNick")){
+            String name = ChineseName.createName();
+            map.put("act","changeNick");
+            map.put("nick",name);
+            map.put("sid",session.getId());
         }
 
         return map;

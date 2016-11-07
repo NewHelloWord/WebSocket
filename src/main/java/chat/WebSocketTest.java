@@ -43,25 +43,13 @@ public class WebSocketTest {
         int num = CoreServer.subOnlineNum();
         OpenServer.getWebSet().remove(this);
         CoreServer.getNickMap().remove(session.getId());
-        //webSet.remove(this);  //从set中删除
-        //subOnlineNum();           //在线数减1
         System.out.println("有一连接关闭！当前在线人数为" + num);
 
         Map<String,Object> map = new HashMap<String, Object>();
         map.put("act","back");
         map.put("sid",session.getId());
         map.put("pNum",CoreServer.getOnlineNum());
-        JSONObject json = JSONObject.fromObject(map);
-        send(json);
-//        for(WebSocketTest wt : OpenServer.getWebSet()){
-//            try {
-//                if(!wt.session.equals(this.session)){
-//                    wt.sendMessage(json.toString());
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        send(map);
     }
 
     @OnError
@@ -72,61 +60,9 @@ public class WebSocketTest {
 
     @OnMessage
     public void onMessage(String message,Session session){
-
         System.out.println("收到的客户端的消息："+message);
-
         Map<String,Object> map = CoreServer.dealMessage(session,message);
-        JSONObject json = JSONObject.fromObject(map);
-        System.out.println("onMessage========"+json);
-        send(json);
-//        for(WebSocketTest wt : OpenServer.getWebSet()){
-//            try {
-//                if(!wt.session.equals(this.session)){
-//                    wt.sendMessage(json.toString());
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
-//        JSONObject json = JSONObject.fromObject(message);
-//        System.out.println(json.getString("act"));
-//        System.out.println(json.getJSONObject("data").getString("ip"));
-//        System.out.println(json.getJSONObject("data").getString("city"));
-//
-//
-//        Map<String,String> map = new HashMap<String, String>();
-//        if(nickMap.get(session.getId()) == null || nickMap.get(session.getId()).equals("无名")){
-//            if(message.contains(CREATE_USER_NICK)){
-//                nickMap.put(session.getId(),message.replace(CREATE_USER_NICK,""));
-//                map.put("nick",message.replace(CREATE_USER_NICK,""));
-//                map.put("message","大家好，我是"+message.replace(CREATE_USER_NICK,""));
-//            }else {
-//                nickMap.put(session.getId(),"无名");
-//                map.put("nick","无名");
-//                map.put("message",message);
-//            }
-//        }else {
-//            map.put("nick",nickMap.get(session.getId()));
-//            map.put("message",message);
-//        }
-//
-//
-//        //JSONObject json = JSONObject.fromObject(map);
-//        System.out.println(json.toString()+"-------------------");
-//        for(WebSocketTest wt : webSet){
-//            try {
-//                if(this.session!=wt.session){
-//                    wt.sendMessage(json.toString());
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                continue;
-//            }
-//        }
-
-
-
+        send(map);
     }
 
 
@@ -134,24 +70,25 @@ public class WebSocketTest {
         this.session.getBasicRemote().sendText(message);
     }
 
-    public void send(JSONObject json){
-        for(WebSocketTest wt : OpenServer.getWebSet()){
-            try {
-                if(!wt.session.equals(this.session)){
+    public void send(Map<String,Object> map){
+        JSONObject json = JSONObject.fromObject(map);
+        System.out.println("onMessage========"+json);
+        try{
+            if(map.get("act").equals("changeNick")){
+                for(WebSocketTest wt : OpenServer.getWebSet()){
                     wt.sendMessage(json.toString());
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            }else{
+                for(WebSocketTest wt : OpenServer.getWebSet()){
+                    if(!wt.session.equals(this.session)){
+                        wt.sendMessage(json.toString());
+                    }
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
+
     }
-
-//    public static synchronized int addOnlineNum() {
-//        return ++onlineNum;
-//    }
-//
-//    public static synchronized int subOnlineNum() {
-//       return --onlineNum;
-//    }
-
 }

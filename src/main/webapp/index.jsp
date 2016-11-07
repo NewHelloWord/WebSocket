@@ -26,6 +26,7 @@
             float: right;
         }
         .chat{
+            max-width: 518px;
             margin-top: 5px;
             padding: 7px;
             word-wrap: break-word;
@@ -36,6 +37,7 @@
             float: left;
         }
         .myChat{
+            max-width: 518px;
             margin-top: 5px;
             padding: 7px;
             word-wrap: break-word;
@@ -67,6 +69,17 @@
             font-weight: bold;
             color: #019e66;
         }
+        .chat_msg{
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color: #f6f6f6;
+            color: #a0a0a0;
+            text-align: center;
+            margin-bottom: 15px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
         .m10{
             margin-right: 10px;
         }
@@ -77,11 +90,11 @@
 
     <div class="leftChat">
         <div class="title" style="margin-bottom: 20px;">
-            myChat
+            myChat v1.0.0
         </div>
         <div class="input-group">
             <span class="input-group-addon">你的昵称</span>
-            <input id="inp_nickname" type="text" class="form-control" maxlength="10" value="谢春花" readonly>
+            <input id="inp_nickname" type="text" class="form-control" maxlength="10" value="" readonly>
             <span id="btn_getnick" class="input-group-btn">
                 <button class="btn btn-default" type="button">
                     <i style="color: orange;" class="icon-refresh"></i>
@@ -90,7 +103,7 @@
         </div>
 
         <div id="user_count" class="list-group-item list-group-item-success" style="cursor:pointer;">
-            <span id="nowusers_count" class="badge" style="background-color:green;">3</span>
+            <span id="nowusers_count" class="badge" style="background-color:green;">0</span>
             <i class="icon-comment m10"></i>当前在线人数
         </div>
 
@@ -144,6 +157,9 @@
             <!---------------- 聊天框my的消息模板 end --------------------->
 
 
+            <div class="chat_msg"><div>21:24:59</div>另类的夏娜 --&gt; 迷迷糊糊的米霍克</div>
+
+
         </div>
 
         <div style="width: 100%;height: 17%">
@@ -167,14 +183,23 @@
     <script>
     $(function(){
 
-        init_control();
+        $('#btn_getnick').on('click',function(){
+            layer.confirm('真的想要换个用户名吗?', function(index){
+                var data = {
+                    'nick': $('#inp_nickname').val()
+                };
+                sendJson('changeNick',data);
+                layer.close(index);
+            });
+        });
+
 
         //获取昵称和唯一标识
         $.ajax({
             url : "getNick.htm",
             dataType : "JSON",
             type : "post",
-            data : {"word":"你好"},
+            data : {},
             async:false,
             success : function(data){
                 $.cookie('uid',data.uid);
@@ -204,23 +229,6 @@
         });
 
     });
-
-    //================================================================================
-    function init_control() {
-//        $(".leftChat").height(window.innerHeight);
-//        $("#zone_left .list-group").height(window.innerHeight - 225),
-//        $("#div_msgpanel").width(.45 * (window.innerWidth - 100)),
-//        $("#div_msgpanel").height(window.innerHeight - 200),
-//        $("#div_msgbox").height(window.innerHeight - 274),
-//        $("#div_privmsg").height(window.innerHeight - 274),
-//        $("#nav_action").width(window.innerWidth - $("#div_msgpanel").width() - $("#zone_left").width() - 40),
-//        $("#zone_left").show(),
-//        $("#zone_center").show(),
-//        1 != $.cookie("isSound") && $.cookie("isSound") ? $("#msg_tips").attr("src", "IMG/sound_off.png") : $("#msg_tips").attr("src", "IMG/sound_on.png")
-    }
-
-
-    //================================================================================
 
 
 
@@ -263,6 +271,14 @@
             }else if(act == "back"){
                 $('#sid_'+data.sid+'').remove();
                 $('#nowusers_count').text(data.pNum);
+            }else if(act == 'changeNick'){
+                if( $('#sid_'+data.sid+'').length > 0){
+                    changeNameDiv($('#sid_'+data.sid+'').find('span').text(),data.nick,CurentTime());
+                    $('#sid_'+data.sid+'').find('span').text(data.nick);
+                }else {
+                    changeNameDiv($('#inp_nickname').val(),data.nick,CurentTime());
+                    $('#inp_nickname').val(data.nick);
+                }
             }
         }
 
@@ -298,7 +314,7 @@
     //发送消息
     function send() {
         var msg = $.trim($('#sendMsg').val());
-        if(msg != null){
+        if(!(msg == null || msg == "")){
             var data = {
                 'msg':msg,
             };
@@ -308,6 +324,8 @@
 //            appendMy('谢春花','20:20:20',msg);
             appendMy($('#inp_nickname').val(),CurentTime(),msg);
             keepBottom();
+        }else {
+            layer.msg("啊呀，写点内容吧");
         }
     }
 
@@ -332,6 +350,11 @@
                         +"</div>"
                     +"</div>"
                     +"<div class=\"clear\"></div>";
+        $('#content').append(html);
+    }
+
+    function changeNameDiv(oName,nName,time){
+        var html = "<div class=\"chat_msg\"><div>"+time+"</div>"+oName+" --&gt; "+nName+"</div>";
         $('#content').append(html);
     }
 
