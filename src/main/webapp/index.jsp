@@ -236,8 +236,8 @@
     function initWebSocket() {
         //判断当前浏览器是否支持WebSocket
         if ('WebSocket' in window) {
-//          websocket = new WebSocket("ws://yl12345.vicp.net:15699/chat");
-            websocket = new WebSocket("ws://localhost:8080/chat");
+          websocket = new WebSocket("ws://yl12345.vicp.net:15699/chat");
+//            websocket = new WebSocket("ws://localhost:8080/chat");
         }
         else {
             layer.msg('当前浏览器 Not support webocket');
