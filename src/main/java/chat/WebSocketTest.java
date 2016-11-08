@@ -2,14 +2,11 @@ package chat;
 
 import net.sf.json.JSONObject;
 
-import javax.json.JsonObject;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Created by JerryMouse on 2016/10/19.
@@ -30,7 +27,7 @@ public class WebSocketTest {
     @OnOpen
     public void onOpen(Session session){
         this.session = session;
-        OpenServer.getWebSet().add(this);
+        OpenManager.getWebSet().add(this);
         int num = CoreServer.addOnlineNum();
         //webSet.add(this);
         //addOnlineNum();
@@ -39,9 +36,9 @@ public class WebSocketTest {
 
     @OnClose
     public void onClose(Session session){
-        OpenServer.getWebSet().remove(this);
+        OpenManager.getWebSet().remove(this);
         int num = CoreServer.subOnlineNum();
-        OpenServer.getWebSet().remove(this);
+        OpenManager.getWebSet().remove(this);
         CoreServer.getNickMap().remove(session.getId());
         System.out.println("有一连接关闭！当前在线人数为" + num);
 
@@ -75,11 +72,11 @@ public class WebSocketTest {
         System.out.println("onMessage========"+json);
         try{
             if(map.get("act").equals("changeNick")){
-                for(WebSocketTest wt : OpenServer.getWebSet()){
+                for(WebSocketTest wt : OpenManager.getWebSet()){
                     wt.sendMessage(json.toString());
                 }
             }else{
-                for(WebSocketTest wt : OpenServer.getWebSet()){
+                for(WebSocketTest wt : OpenManager.getWebSet()){
                     if(!wt.session.equals(this.session)){
                         wt.sendMessage(json.toString());
                     }
