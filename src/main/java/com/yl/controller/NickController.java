@@ -1,7 +1,10 @@
 package com.yl.controller;
 
 import chat.CoreServer;
+import com.yl.model.Visit;
+import com.yl.service.VisityManager;
 import net.sf.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,6 +15,7 @@ import utils.UuidUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -19,6 +23,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Controller
 public class NickController {
+
+    @Autowired
+    private VisityManager visityManager;
 
     //获取昵称和唯一标识
     @RequestMapping(value = "/getNick.htm")
@@ -43,6 +50,17 @@ public class NickController {
             //中国=华东=浙江省=杭州市==电信
 
             //TODO  在这里进行保存数据库操作
+            Visit visit = new Visit();
+            visit.setNick(name);
+            visit.setAddress(adress);
+            visit.setJoinTime(new Date());
+            visit.setUid(uid);
+            if(s.equals("183.128.233.233")){
+                visit.setIp("127.0.0.1");
+            }else {
+                visit.setIp(s);
+            }
+            visityManager.addVisity(visit);
 
 
         } catch (URISyntaxException e) {
