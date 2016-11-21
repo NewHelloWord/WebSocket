@@ -31,7 +31,6 @@ public class WebSocketTest {
         int num = CoreServer.addOnlineNum();
         //webSet.add(this);
         //addOnlineNum();
-        System.out.println("新连接，当前在线数："+num);
     }
 
     @OnClose
@@ -40,7 +39,6 @@ public class WebSocketTest {
         int num = CoreServer.subOnlineNum();
         OpenManager.getWebSet().remove(this);
         CoreServer.getNickMap().remove(session.getId());
-        System.out.println("有一连接关闭！当前在线人数为" + num);
 
         Map<String,Object> map = new HashMap<String, Object>();
         map.put("act","back");
@@ -51,13 +49,11 @@ public class WebSocketTest {
 
     @OnError
     public void onError(Session session, Throwable error){
-        System.out.println("发生错误了。。。。。");
         error.printStackTrace();
     }
 
     @OnMessage
     public void onMessage(String message,Session session){
-        System.out.println("收到的客户端的消息："+message);
         Map<String,Object> map = CoreServer.dealMessage(session,message);
         send(map);
     }
@@ -69,7 +65,6 @@ public class WebSocketTest {
 
     public void send(Map<String,Object> map){
         JSONObject json = JSONObject.fromObject(map);
-        System.out.println("onMessage========"+json);
         try{
             if(map.get("act").equals("changeNick")){
                 for(WebSocketTest wt : OpenManager.getWebSet()){

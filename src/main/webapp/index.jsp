@@ -165,11 +165,13 @@
         <div style="width: 100%;height: 17%">
             <textarea id="sendMsg" maxlength="500" placeholder="请在此输入聊天信息" style="resize: none; width: 100%; height: 65%;padding: 6px 12px;font-size: 16px;border-radius: 4px;"></textarea>
             <button id="send" type="button" class="btn btn-primary right" style="width: 200px;height: 30%;">发送</button>
+            <span style="float: right;margin-right: 10px;line-height: 50px;">按Ctrl+Enter发送</span>
         </div>
     </div>
     <input id="uid" type="hidden">
 
 
+    <script type="text/javascript" color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
     <script src="res/js/jquery.min.js"></script>
     <script src="res/js/bootstrap.min.js"></script>
     <script src="res/js/jquery.cookie.js"></script>
@@ -183,6 +185,24 @@
     <script>
     $(function(){
 
+        document.onkeydown=function(event){
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            if ((e.keyCode == 73 && e.ctrlKey && e.shiftKey) || (e && e.keyCode==123)) {
+                layer.msg('代码写得太烂了，还是别看了  囧rz');
+                return false;
+            }
+            if (e.keyCode == 13 && e.ctrlKey ) {     // Ctrl + Enter  发送
+                send();
+            }
+        };
+
+        document.oncontextmenu=function(event) {
+            layer.msg('咦，右键咋没用了呢？');
+            if (document.all) window.event.returnValue = false;// for IE
+            else event.preventDefault();
+        };
+
+
         $('#btn_getnick').on('click',function(){
             layer.confirm('真的想要换个用户名吗?', function(index){
                 var data = {
@@ -193,13 +213,12 @@
             });
         });
 
-
         //获取昵称和唯一标识
         $.ajax({
             url : "getNick.htm",
             dataType : "JSON",
             type : "post",
-            data : {},
+            data : {"reLogin":$.cookie('uid')},
             async:false,
             success : function(data){
                 $.cookie('uid',data.uid);
@@ -213,9 +232,6 @@
                 console.log(data.nickMap);
             },
             error : function(XMLHttpRequest, textStatus, errorThrown){
-//                alert(XMLHttpRequest.status);
-//                alert(XMLHttpRequest.readyState);
-//                alert(textStatus);
             }
 
         });

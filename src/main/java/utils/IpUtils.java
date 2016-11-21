@@ -146,7 +146,7 @@ public class IpUtils {
                 }
             }
             //中国=华东=浙江省=杭州市==电信
-            result = country + "=" + area + "=" + region + "=" + city + "=" + county + "=" + isp;
+            result = country + "-" + area + "-" + region + "-" + city + "-" + isp;
         }
         return result;
     }
